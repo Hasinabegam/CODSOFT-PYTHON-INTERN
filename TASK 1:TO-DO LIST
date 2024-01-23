@@ -1,1 +1,60 @@
+import sqlite3
+from datetime import datetime
 
+class ToDo:
+    def __init__(self):
+        self.conn = sqlite3.connect('todo.db')
+        self.cursor = self.conn.cursor()
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS tasks
+                                (id INTEGER PRIMARY KEY, task TEXT, deadline TEXT)''')
+
+    def add_task(self, task, deadline):
+        self.cursor.execute("INSERT INTO tasks (task, deadline) VALUES (?, ?)", (task, deadline))
+        self.conn.commit()
+
+    def view_tasks(self):
+        self.cursor.execute("SELECT * FROM tasks")
+        rows = self.cursor.fetchall()
+        for row in rows:
+            print(f"{row[0]}) {row[1]} - {row[2]}")
+
+    def delete_task(self, id):
+        self.cursor.execute("DELETE FROM tasks WHERE id=?", (id,))
+        self.conn.commit()
+
+    def update_task(self, id, task, deadline):
+        self.cursor.execute("UPDATE tasks SET task = ?, deadline = ? WHERE id = ?", (task, deadline, id))
+        self.conn.commit()
+
+def menu():
+    todo = ToDo()
+    while True:
+        print("\n------- MENU -------")
+        print("1) Add Task")
+        print("2) View Tasks")
+        print("3) Delete Task")
+        print("4) Update Task")
+        print("5) Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            task = input("Enter task: ")
+            deadline = input("Enter deadline (DD-MM-YYYY): ")
+            todo.add_task(task, deadline)
+        elif choice == '2':
+            todo.view_tasks()
+        elif choice == '3':
+            id = input("Enter task id: ")
+            todo.delete_task(id)
+        elif choice == '4':
+            id = input("Enter task id: ")
+            task = input("Enter updated task: ")
+            deadline = input("Enter updated deadline (DD-MM-YYYY): ")
+            todo.update_task(id, task, deadline)
+        elif choice == '5':
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    menu()
