@@ -1,0 +1,50 @@
+import requests
+import json
+
+# Function to get the weather data
+def get_weather_data(city_name, api_key):
+    base_url = "http://api.openweathermap.org/data/2.5/weather"
+    complete_url = base_url + "appid=" + api_key + "&q=" + city_name
+    
+    response = requests.get(complete_url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        main = data['weather'][0]['main']
+        description = data['weather'][0]['description']
+        temp = data['main']['temp']
+        humidity = data['main']['humidity']
+        wind_speed = data['wind']['speed']
+        
+        return {
+            'main': main,
+            'description': description,
+            'temp': temp,
+            'humidity': humidity,
+            'wind_speed': wind_speed
+        }
+    else:
+        return None
+
+# Function to display the weather data
+def display_weather_data(weather_data):
+    if weather_data is not None:
+        print("Weather Data for City: ", weather_data['name'])
+        print("Temperature: ", weather_data['temp'], "K")
+        print("Humidity: ", weather_data['humidity'], "%")
+        print("Wind Speed: ", weather_data['wind_speed'], "m/s")
+        print("Weather Description: ", weather_data['description'])
+    else:
+        print("City not found.")
+
+# User Input
+city_name = input("Enter the name of a city or a zip code: ")
+
+# API Key
+api_key = "YOUR_API_KEY"
+
+# Get Weather Data
+weather_data = get_weather_data(city_name, api_key)
+
+# Display Weather Data
+display_weather_data(weather_data)
