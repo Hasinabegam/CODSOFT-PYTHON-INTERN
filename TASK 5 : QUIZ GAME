@@ -1,0 +1,57 @@
+import random
+
+class QuizGame:
+    def __init__(self, questions):
+        self.questions = questions
+        self.score = 0
+
+    def load_questions(self):
+        # Load your quiz questions here
+        # Each question should be a dictionary with 'question', 'choices', and 'correct_answer' keys
+        # Example: {'question': 'What is the capital of France?', 'choices': ['A', 'B', 'C', 'D'], 'correct_answer': 'C'}
+        pass
+
+    def present_question(self, question):
+        print(question['question'])
+        for i, choice in enumerate(question['choices'], start=1):
+            print(f"{i}. {choice}")
+
+        user_answer = input("Enter the number of your choice: ")
+        return user_answer
+
+    def evaluate_answer(self, user_answer, correct_answer):
+        if user_answer == correct_answer:
+            print("Correct!\n")
+            self.score += 1
+        else:
+            print(f"Incorrect! The correct answer is {correct_answer}.\n")
+
+    def play_game(self):
+        random.shuffle(self.questions)
+        for question in self.questions:
+            user_answer = self.present_question(question)
+            self.evaluate_answer(user_answer, question['correct_answer'])
+
+        print(f"Your final score is: {self.score}/{len(self.questions)}")
+
+    def play_again(self):
+        return input("Do you want to play again? (yes/no): ").lower() == 'yes'
+
+def main():
+    questions = [
+        {'question': 'Which is the hottest planet in the solar system?', 'choices': ['A. Mercury', 'B. Venus', 'C. Mars', 'D. Jupiter'], 'correct_answer': '2'},
+        {'question': 'Where was the electricity supply first introduced in India?', 'choices': ['A. Mumbai', 'B. Dehradun', 'C. Darjeeling', 'D. Chennai'], 'correct_answer': '3'},
+        {'question': 'Fathometer is used to measure ?', 'choices': ['A. Earthquake', 'B. Rainfall', 'C. Sound Intensity', 'D. Ocean depth'], 'correct_answer': '4'},
+        # Add more questions as needed
+    ]
+
+    game = QuizGame(questions)
+
+    while True:
+        game.play_game()
+        if not game.play_again():
+            print("Thanks for playing! Goodbye!")
+            break
+
+if __name__ == "__main__":
+    main()
